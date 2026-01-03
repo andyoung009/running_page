@@ -1368,3 +1368,26 @@ Actions [源码](https://github.com/yihong0618/running_page/blob/master/.github/
   ```bash
   if [ "$VERCEL_GIT_COMMIT_REF" != "gh-pages" ]; then exit 1; else exit 0;
   ```
+
+# 我的运行数据更新指令步骤
+
+```
+python run_page/gen_svg.py --from-db --type circular --use-localtime
+
+python run_page/gen_svg.py --from-db --title "Five" --type github --athlete "Five" --special-distance 3 --special-distance2 5 --special-color yellow --special-color2 red --output assets/github.svg --use-localtime --min-distance 0.5
+
+python run_page/gen_svg.py --from-db --title "Five" --type grid --athlete "Five"  --output assets/grid.svg --min-distance 2.0 --special-color yellow --special-color2 red --special-distance 20 --special-distance2 5 --use-localtime
+
+python run_page/gen_svg.py --from-db --type circular --use-localtime
+
+python3 run_page/gen_svg.py --from-db --type monthoflife --birth 1992-06 --special-distance 5 --special-distance2 10 --special-color '#f9d367'  --special-color2 '#f0a1a8' --output assets/mol.svg --use-localtime --athlete Five --title 'Runner Month of Life'
+
+yarn install
+```
+
+---
+# 参考教程
+
+[1] https://www.youtube.com/watch?v=VdNkFxTX5QQ&list=WL&index=12
+
+[2] https://www.youtube.com/watch?v=reLiY9p8EJk
