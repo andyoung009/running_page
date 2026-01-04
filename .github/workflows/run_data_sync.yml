@@ -43,6 +43,9 @@ env:
   GENERATE_MONTH_OF_LIFE: true # If you want to generate the month of life, set it to `true`
   BIRTHDAY_MONTH: 1992-06 # If you want to generate the month of life, set it to your birthday month, format is YYYY-MM
 
+permissions:
+  contents: write
+
 jobs:
   sync:
     name: Sync
