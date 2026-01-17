@@ -364,35 +364,44 @@ const getBoundsForGeoData = (
   geoData: FeatureCollection<LineString>
 ): IViewState => {
   const { features } = geoData;
-  let points: Coordinate[] = [];
-  // find first have data
+  let allPoints: Coordinate[] = [];
+
+  // Collect all coordinates from all features
   for (const f of features) {
     if (f.geometry.coordinates.length) {
-      points = f.geometry.coordinates as Coordinate[];
-      break;
+      allPoints = allPoints.concat(f.geometry.coordinates as Coordinate[]);
     }
   }
-  if (points.length === 0) {
+
+  if (allPoints.length === 0) {
     return { longitude: 20, latitude: 20, zoom: 3 };
   }
-  if (points.length === 2 && String(points[0]) === String(points[1])) {
-    return { longitude: points[0][0], latitude: points[0][1], zoom: 9 };
+
+  // Handle single point case
+  if (allPoints.length === 1) {
+    return { longitude: allPoints[0][0], latitude: allPoints[0][1], zoom: 9 };
   }
-  // Calculate corner values of bounds
-  const pointsLong = points.map((point) => point[0]) as number[];
-  const pointsLat = points.map((point) => point[1]) as number[];
+
+  // Calculate corner values of bounds from all points
+  const pointsLong = allPoints.map((point) => point[0]) as number[];
+  const pointsLat = allPoints.map((point) => point[1]) as number[];
   const cornersLongLat: [Coordinate, Coordinate] = [
     [Math.min(...pointsLong), Math.min(...pointsLat)],
     [Math.max(...pointsLong), Math.max(...pointsLat)],
   ];
+
   const viewState = new WebMercatorViewport({
     width: 800,
     height: 600,
   }).fitBounds(cornersLongLat, { padding: 200 });
   let { longitude, latitude, zoom } = viewState;
+
+  // Adjust zoom level for multiple features
   if (features.length > 1) {
-    zoom = 11.5;
+    // Use calculated zoom for better fit, but cap it at 11.5 for detail view
+    zoom = Math.min(zoom, 11.5);
   }
+
   return { longitude, latitude, zoom };
 };
 
