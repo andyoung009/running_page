@@ -14,50 +14,54 @@ import sys
 import io
 
 # 确保 UTF-8 输出
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 SQL_FILE = "run_page/data.db"
 
 # 城市名称映射：将没有"市"后缀的城市名添加"市"
 CITY_SUFFIX_MAP = {
-    '呼和浩特': '呼和浩特市',
-    '杭州': '杭州市',
-    '天津': '天津市',
-    '石家庄': '石家庄市',
-    '榆林': '榆林市',
-    '鄂尔多斯': '鄂尔多斯市',
+    "呼和浩特": "呼和浩特市",
+    "杭州": "杭州市",
+    "天津": "天津市",
+    "石家庄": "石家庄市",
+    "榆林": "榆林市",
+    "鄂尔多斯": "鄂尔多斯市",
 }
+
 
 def add_city_suffix(location_country):
     """为城市名添加"市"后缀"""
-    if not location_country or ',' not in location_country:
+    if not location_country or "," not in location_country:
         return location_country
 
-    parts = location_country.split(',')
+    parts = location_country.split(",")
     if len(parts) >= 2:
         city = parts[0].strip()
 
         # 如果城市在映射表中，替换为带"市"后缀的版本
         if city in CITY_SUFFIX_MAP:
             parts[0] = CITY_SUFFIX_MAP[city]
-            return ','.join(parts)
+            return ",".join(parts)
 
     return location_country
+
 
 def fix_database():
     """修复数据库中的城市名称，添加"市"后缀"""
     print(f"正在连接数据库: {SQL_FILE}")
-    print("="*80)
+    print("=" * 80)
 
     conn = sqlite3.connect(SQL_FILE)
     cursor = conn.cursor()
 
     # 获取所有需要修复的活动
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT run_id, name, location_country
         FROM activities
         WHERE location_country IS NOT NULL AND location_country != ''
-    """)
+    """
+    )
 
     activities = cursor.fetchall()
     print(f"找到 {len(activities)} 条包含位置信息的活动\n")
@@ -75,31 +79,33 @@ def fix_database():
             print(f"  新格式: {new_location}")
 
             cursor.execute(
-                'UPDATE activities SET location_country = ? WHERE run_id = ?',
-                (new_location, run_id)
+                "UPDATE activities SET location_country = ? WHERE run_id = ?",
+                (new_location, run_id),
             )
             updated_count += 1
             print(f"  ✓ 已更新\n")
 
     # 提交更改
     conn.commit()
-    print("="*80)
+    print("=" * 80)
     print(f"数据库更新完成:")
     print(f"  - 已更新: {updated_count} 条")
     print(f"  - 总计: {len(activities)} 条\n")
 
     # 显示更新后的统计
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT location_country, COUNT(*) as count
         FROM activities
         WHERE location_country IS NOT NULL
         GROUP BY location_country
         ORDER BY count DESC
-    """)
+    """
+    )
 
     results = cursor.fetchall()
     print("更新后的城市分布:")
-    print("-"*80)
+    print("-" * 80)
     for location, count in results:
         print(f"{location}: {count}条")
 
@@ -107,24 +113,25 @@ def fix_database():
 
     return updated_count
 
+
 if __name__ == "__main__":
-    print("\n" + "="*80)
-    print("添加城市\"市\"后缀修复工具")
-    print("="*80 + "\n")
+    print("\n" + "=" * 80)
+    print('添加城市"市"后缀修复工具')
+    print("=" * 80 + "\n")
 
     updated = fix_database()
 
     if updated > 0:
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("✓ 修复完成！")
-        print("="*80)
+        print("=" * 80)
         print("\n说明：")
-        print("已为城市名添加\"市\"后缀，以匹配前端的 extractCities 函数。")
-        print("前端使用正则表达式匹配城市名，要求城市名必须以\"市\"结尾。")
+        print('已为城市名添加"市"后缀，以匹配前端的 extractCities 函数。')
+        print('前端使用正则表达式匹配城市名，要求城市名必须以"市"结尾。')
         print("\n下一步：")
         print("1. 运行 python regenerate_json.py 重新生成 activities.json")
         print("2. 启动前端查看效果: npm run dev")
     else:
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("✓ 数据格式已经正确，无需修复")
-        print("="*80)
+        print("=" * 80)

@@ -8,7 +8,7 @@ import io
 import datetime
 
 # Ensure UTF-8 output
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 SQL_FILE = "run_page/data.db"
 JSON_FILE = "src/static/activities.json"
@@ -20,14 +20,16 @@ def load_activities_from_db():
     cursor = conn.cursor()
 
     # Get all activities with distance > 0.1, ordered by start_date_local
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT run_id, name, distance, moving_time, type, subtype,
                start_date, start_date_local, location_country,
                summary_polyline, average_heartrate, average_speed, elevation_gain
         FROM activities
         WHERE distance > 0.1
         ORDER BY start_date_local
-    """)
+    """
+    )
 
     activities = cursor.fetchall()
     conn.close()
@@ -37,9 +39,21 @@ def load_activities_from_db():
     last_date = None
 
     for activity in activities:
-        (run_id, name, distance, moving_time, type_, subtype,
-         start_date, start_date_local, location_country,
-         summary_polyline, average_heartrate, average_speed, elevation_gain) = activity
+        (
+            run_id,
+            name,
+            distance,
+            moving_time,
+            type_,
+            subtype,
+            start_date,
+            start_date_local,
+            location_country,
+            summary_polyline,
+            average_heartrate,
+            average_speed,
+            elevation_gain,
+        ) = activity
 
         # Calculate streak
         date = datetime.datetime.strptime(start_date_local, "%Y-%m-%d %H:%M:%S").date()

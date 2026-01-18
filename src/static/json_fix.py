@@ -23,7 +23,7 @@ import io
 import os
 
 # 确保 UTF-8 输出
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 # 获取项目根目录
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -50,12 +50,13 @@ def fix_location_country_format(location_country):
         return ""
 
     # 检查是否是Keep的字典格式
-    if location_country.startswith('{') and 'latitude' in location_country:
+    if location_country.startswith("{") and "latitude" in location_country:
         try:
             import ast
+
             region = ast.literal_eval(location_country)
-            city = region.get('city', '')
-            province = region.get('province', '')
+            city = region.get("city", "")
+            province = region.get("province", "")
 
             # 保留城市名中的"市"后缀，前端需要它来匹配城市
             # 注意：不要移除"市"后缀，因为前端的extractCities函数需要它
@@ -70,22 +71,22 @@ def fix_location_country_format(location_country):
             pass
 
     # 如果已经包含逗号，说明格式可能已经正确，检查是否有国家信息
-    if ',' in location_country:
-        parts = location_country.split(',')
+    if "," in location_country:
+        parts = location_country.split(",")
         # 如果最后一部分看起来像国家名（包含"国"字），则认为格式正确
-        if len(parts) >= 2 and ('国' in parts[-1] or len(parts[-1]) > 1):
+        if len(parts) >= 2 and ("国" in parts[-1] or len(parts[-1]) > 1):
             return location_country
         # 否则添加国家信息
         return f"{location_country},中国"
 
     # 如果包含冒号，转换格式
-    if ':' in location_country:
+    if ":" in location_country:
         # 将 "城市:省份" 转换为 "城市,省份,中国"
-        location_country = location_country.replace(':', ',')
+        location_country = location_country.replace(":", ",")
         return f"{location_country},中国"
 
     # 如果只有省份信息（包含"省"或"自治区"）
-    if '省' in location_country or '自治区' in location_country:
+    if "省" in location_country or "自治区" in location_country:
         return f"{location_country},中国"
 
     # 其他情况，假设是城市名，添加中国
@@ -95,17 +96,19 @@ def fix_location_country_format(location_country):
 def fix_database():
     """修复数据库中的 location_country 格式"""
     print(f"正在连接数据库: {SQL_FILE}")
-    print("="*80)
+    print("=" * 80)
 
     conn = sqlite3.connect(SQL_FILE)
     cursor = conn.cursor()
 
     # 获取所有需要修复的活动
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT run_id, name, location_country
         FROM activities
         WHERE location_country IS NOT NULL AND location_country != ''
-    """)
+    """
+    )
 
     activities = cursor.fetchall()
     print(f"找到 {len(activities)} 条包含位置信息的活动\n")
@@ -124,8 +127,8 @@ def fix_database():
             print(f"  新格式: {new_location}")
 
             cursor.execute(
-                'UPDATE activities SET location_country = ? WHERE run_id = ?',
-                (new_location, run_id)
+                "UPDATE activities SET location_country = ? WHERE run_id = ?",
+                (new_location, run_id),
             )
             updated_count += 1
             print(f"  ✓ 已更新\n")
@@ -134,7 +137,7 @@ def fix_database():
 
     # 提交更改
     conn.commit()
-    print("="*80)
+    print("=" * 80)
     print(f"数据库更新完成:")
     print(f"  - 已更新: {updated_count} 条")
     print(f"  - 未变化: {unchanged_count} 条")
@@ -148,20 +151,22 @@ def fix_database():
 def regenerate_activities_json():
     """从数据库重新生成 activities.json"""
     print(f"正在从数据库生成 activities.json...")
-    print("="*80)
+    print("=" * 80)
 
     conn = sqlite3.connect(SQL_FILE)
     cursor = conn.cursor()
 
     # 获取所有活动数据
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT run_id, name, distance, moving_time, type, subtype,
                start_date, start_date_local, location_country,
                summary_polyline, average_heartrate, average_speed, elevation_gain
         FROM activities
         WHERE distance > 0.1
         ORDER BY start_date_local
-    """)
+    """
+    )
 
     activities = cursor.fetchall()
     conn.close()
@@ -173,9 +178,21 @@ def regenerate_activities_json():
     import datetime
 
     for activity in activities:
-        (run_id, name, distance, moving_time, type_, subtype,
-         start_date, start_date_local, location_country,
-         summary_polyline, average_heartrate, average_speed, elevation_gain) = activity
+        (
+            run_id,
+            name,
+            distance,
+            moving_time,
+            type_,
+            subtype,
+            start_date,
+            start_date_local,
+            location_country,
+            summary_polyline,
+            average_heartrate,
+            average_speed,
+            elevation_gain,
+        ) = activity
 
         # 计算连续天数
         date = datetime.datetime.strptime(start_date_local, "%Y-%m-%d %H:%M:%S").date()
@@ -217,7 +234,7 @@ def regenerate_activities_json():
 
     # 显示一些示例
     print("修复后的 location_country 示例:")
-    print("-"*80)
+    print("-" * 80)
     for i, activity in enumerate(activity_list[:10]):
         location = activity.get("location_country", "")
         name = activity.get("name", "")
@@ -229,22 +246,22 @@ def regenerate_activities_json():
 
 def main():
     """主函数"""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("location_country 格式修复工具")
-    print("="*80 + "\n")
+    print("=" * 80 + "\n")
 
     print("步骤 1: 修复数据库中的 location_country 格式")
-    print("-"*80)
+    print("-" * 80)
     updated_count = fix_database()
 
     if updated_count > 0:
         print("\n步骤 2: 重新生成 activities.json")
-        print("-"*80)
+        print("-" * 80)
         regenerate_activities_json()
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("✓ 修复完成！")
-        print("="*80)
+        print("=" * 80)
         print("\n使用说明：")
         print("1. 数据库已更新，location_country 格式已修复")
         print("2. activities.json 已重新生成")
@@ -258,9 +275,9 @@ def main():
         print("  - province: 省份名")
         print("  - country: 中国")
     else:
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("✓ 数据格式已经正确，无需修复")
-        print("="*80)
+        print("=" * 80)
 
 
 if __name__ == "__main__":
