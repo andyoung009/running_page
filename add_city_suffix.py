@@ -83,12 +83,12 @@ def fix_database():
                 (new_location, run_id),
             )
             updated_count += 1
-            print(f"  ✓ 已更新\n")
+            print("  ✓ 已更新\n")
 
     # 提交更改
     conn.commit()
     print("=" * 80)
-    print(f"数据库更新完成:")
+    print("数据库更新完成:")
     print(f"  - 已更新: {updated_count} 条")
     print(f"  - 总计: {len(activities)} 条\n")
 

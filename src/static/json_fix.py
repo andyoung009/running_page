@@ -67,7 +67,7 @@ def fix_location_country_format(location_country):
                 return f"{province},中国"
             elif city:
                 return f"{city},中国"
-        except:
+        except Exception:
             pass
 
     # 如果已经包含逗号，说明格式可能已经正确，检查是否有国家信息
@@ -131,14 +131,14 @@ def fix_database():
                 (new_location, run_id),
             )
             updated_count += 1
-            print(f"  ✓ 已更新\n")
+            print("  ✓ 已更新\n")
         else:
             unchanged_count += 1
 
     # 提交更改
     conn.commit()
     print("=" * 80)
-    print(f"数据库更新完成:")
+    print("数据库更新完成:")
     print(f"  - 已更新: {updated_count} 条")
     print(f"  - 未变化: {unchanged_count} 条")
     print(f"  - 总计: {len(activities)} 条\n")
@@ -150,7 +150,7 @@ def fix_database():
 
 def regenerate_activities_json():
     """从数据库重新生成 activities.json"""
-    print(f"正在从数据库生成 activities.json...")
+    print("正在从数据库生成 activities.json...")
     print("=" * 80)
 
     conn = sqlite3.connect(SQL_FILE)

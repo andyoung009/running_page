@@ -43,7 +43,7 @@ print(f"\n省份数量: {len(provinces)}")
 print(f"省份列表: {sorted(provinces)}")
 
 print(f"\n城市数量: {len(cities)}")
-print(f"\n城市分布（按活动数量排序）:")
+print("\n城市分布（按活动数量排序）:")
 for city, count in sorted(cities.items(), key=lambda x: x[1], reverse=True):
     print(f"  {city}: {count}条")
 
