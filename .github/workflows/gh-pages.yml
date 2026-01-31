@@ -93,10 +93,21 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
       - name: Build
         env:
           REPO_NAME: ${{ github.event.repository.name }}
         run: PATH_PREFIX=/$REPO_NAME pnpm build
+
+      - name: Copy parquet file to dist directory
+        run: |
+          if [ -f run_page/data.parquet ]; then
+            cp run_page/data.parquet dist/data.parquet
+            echo "✅ Copied data.parquet to dist directory"
+            ls -lh dist/data.parquet
+          else
+            echo "⚠️ data.parquet not found, skipping"
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
