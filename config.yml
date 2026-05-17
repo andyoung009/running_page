@@ -16,37 +16,37 @@ theme: dark
 
 goals:
   all:
-    yearly: 2500
-    monthly: 150
-    weekly: 35
+    yearly: 800   # 3 km × 365
+    monthly: 68    # 3 km × 30
+    weekly: 15     # 3 km × 7
     unit: distance
 
   Run:
-    yearly: 1200
-    monthly: 100
-    weekly: 25
+    yearly: 800   # 3 km × 365
+    monthly: 68    # 3 km × 30
+    weekly: 15     # 3 km × 7
     unit: distance
 
   Walk:
-    yearly: 500
-    monthly: 40
-    weekly: 10
+    yearly: 385
+    monthly: 32
+    weekly: 8
     unit: distance
 
   Ride:
-    yearly: 1000
-    monthly: 80
-    weekly: 20
+    yearly: 385
+    monthly: 32
+    weekly: 8
     unit: distance
 
   Hike:
-    yearly: 300
-    monthly: 25
-    weekly: 6
+    yearly: 385
+    monthly: 32
+    weekly: 8
     unit: distance
 
   Gym:
-    yearly: 6000   # 100 小时
-    monthly: 600   # 10 小时
-    weekly: 150    # 2.5 小时
+    yearly: 520   # 100 小时
+    monthly: 42   # 10 小时
+    weekly: 7    # 2.5 小时
     unit: time
