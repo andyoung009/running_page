@@ -5,7 +5,7 @@
 
 # 默认语言：zh（中文）| en（英文）
 # 用户手动切换后会保存到 localStorage，下次访问以用户选择为准
-locale: en
+locale: zh
 
 # 默认主题：system（跟随系统）| light（浅色）| dark（深色）
 theme: dark
@@ -25,6 +25,12 @@ goals:
     yearly: 1200
     monthly: 100
     weekly: 25
+    unit: distance
+
+  Walk:
+    yearly: 500
+    monthly: 40
+    weekly: 10
     unit: distance
 
   Ride:

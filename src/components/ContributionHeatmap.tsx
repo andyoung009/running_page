@@ -13,9 +13,10 @@ interface HeatmapProps {
   onSelectActivity?: (a: Activity | null) => void
 }
 
-// Map any activity type to the 4 display categories
-function toDisplayType(type: string): 'Run' | 'Ride' | 'Hike' | 'Training' {
+// Map any activity type to the 5 display categories
+function toDisplayType(type: string): 'Run' | 'Walk' | 'Ride' | 'Hike' | 'Training' {
   if (type === 'Run') return 'Run'
+  if (type === 'Walk') return 'Walk'
   if (type === 'Ride') return 'Ride'
   if (type === 'Hike') return 'Hike'
   return 'Training'
@@ -23,6 +24,7 @@ function toDisplayType(type: string): 'Run' | 'Ride' | 'Hike' | 'Training' {
 
 const TYPE_PALETTES: Record<string, string[]> = {
   Run:      ['#fed7aa', '#fb923c', '#f97316', '#ea580c'],
+  Walk:     ['#ccfbf1', '#5eead4', '#14b8a6', '#0d9488'],
   Ride:     ['#bfdbfe', '#60a5fa', '#3b82f6', '#2563eb'],
   Hike:     ['#bbf7d0', '#4ade80', '#22c55e', '#16a34a'],
   Training: ['#fce7f3', '#f9a8d4', '#ec4899', '#db2777'],
@@ -35,6 +37,7 @@ function getColor(distance: number, max: number, filter: SportFilter): string {
   const colors: Record<string, string[]> = {
     all:  ['#e9d5ff', '#c084fc', '#a855f7', '#7c3aed'],
     Run:  TYPE_PALETTES.Run,
+    Walk: TYPE_PALETTES.Walk,
     Ride: TYPE_PALETTES.Ride,
     Hike: TYPE_PALETTES.Hike,
     Gym:  ['#f5d0fe', '#d946ef', '#c026d3', '#a21caf'],
@@ -54,6 +57,7 @@ function getColorAll(typeRatio: number, displayType: string): string {
 function typeLabel(type: string, locale: string): string {
   const map: Record<string, { zh: string; en: string }> = {
     Run:      { zh: '跑步', en: 'Run' },
+    Walk:     { zh: '步行', en: 'Walk' },
     Ride:     { zh: '骑行', en: 'Ride' },
     Hike:     { zh: '徒步', en: 'Hike' },
     Training: { zh: '训练', en: 'Training' },
@@ -66,7 +70,7 @@ function typeLabel(type: string, locale: string): string {
 }
 
 // Dominant display type for a day (by distance; Training is fallback)
-function dominantDisplayType(acts: Activity[]): 'Run' | 'Ride' | 'Hike' | 'Training' {
+function dominantDisplayType(acts: Activity[]): 'Run' | 'Walk' | 'Ride' | 'Hike' | 'Training' {
   if (acts.length === 0) return 'Training'
   const sorted = [...acts].sort((a, b) => b.distance - a.distance)
   return toDisplayType(sorted[0].type)
@@ -165,7 +169,7 @@ export function ContributionHeatmap({ activities, year: defaultYear, filter, onS
         .filter(a => yearToCheck === null || new Date(a.start_date_local).getFullYear() === yearToCheck)
         .map(a => toDisplayType(a.type))
     )
-    return (['Run', 'Ride', 'Hike', 'Training'] as const).filter(t => types.has(t))
+    return (['Run', 'Walk', 'Ride', 'Hike', 'Training'] as const).filter(t => types.has(t))
   }, [activities, selectedYear, isAll])
 
   // Gym: monthly session breakdown

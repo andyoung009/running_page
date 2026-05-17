@@ -88,7 +88,12 @@ export function RouteMap({ activities, selectedActivity, dark, onClearSelection 
         type: 'line',
         source: 'selected',
         paint: {
-          'line-color': selectedActivity.type === 'Run' ? '#f97316' : '#3b82f6',
+          'line-color':
+            selectedActivity.type === 'Run'
+              ? '#f97316'
+              : selectedActivity.type === 'Walk'
+                ? '#14b8a6'
+                : '#3b82f6',
           'line-width': 3,
           'line-opacity': 0.9,
         },
@@ -136,7 +141,9 @@ export function RouteMap({ activities, selectedActivity, dark, onClearSelection 
           'match',
           ['get', 'type'],
           'Run', '#f97316',
+          'Walk', '#14b8a6',
           'Ride', '#3b82f6',
+          'Hike', '#22c55e',
           '#a855f7',
         ],
         'line-width': 1.5,

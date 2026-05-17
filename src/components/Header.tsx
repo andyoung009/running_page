@@ -23,6 +23,7 @@ export function Header({ filter, setFilter, dark, toggleTheme, activities, page,
   const allTabs: { label: string; value: SportFilter }[] = [
     { label: t('all'), value: 'all' },
     { label: t('run'), value: 'Run' },
+    { label: t('walk'), value: 'Walk' },
     { label: t('ride'), value: 'Ride' },
     { label: t('hike'), value: 'Hike' },
     { label: t('gym'), value: 'Gym' },
