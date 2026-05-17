@@ -1,0 +1,52 @@
+# Workout Dashboard 配置文件
+# 修改此文件即可完成个性化设置，无需改动源代码。
+
+# ── 外观 ─────────────────────────────────────────────────────────────────────
+
+# 默认语言：zh（中文）| en（英文）
+# 用户手动切换后会保存到 localStorage，下次访问以用户选择为准
+locale: zh
+
+# 默认主题：system（跟随系统）| light（浅色）| dark（深色）
+theme: dark
+
+# ── 运动目标 ──────────────────────────────────────────────────────────────────
+# unit: distance → 单位 km
+# unit: time     → 单位 分钟（适用于健身等无距离运动）
+
+goals:
+  all:
+    yearly: 800   # 3 km × 365
+    monthly: 68    # 3 km × 30
+    weekly: 15     # 3 km × 7
+    unit: distance
+
+  Run:
+    yearly: 800   # 3 km × 365
+    monthly: 68    # 3 km × 30
+    weekly: 15     # 3 km × 7
+    unit: distance
+
+  Walk:
+    yearly: 385
+    monthly: 32
+    weekly: 8
+    unit: distance
+
+  Ride:
+    yearly: 385
+    monthly: 32
+    weekly: 8
+    unit: distance
+
+  Hike:
+    yearly: 385
+    monthly: 32
+    weekly: 8
+    unit: distance
+
+  Gym:
+    yearly: 520   # 100 小时
+    monthly: 42   # 10 小时
+    weekly: 7    # 2.5 小时
+    unit: time
