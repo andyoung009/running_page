@@ -1,8 +1,8 @@
 export interface Activity {
-  run_id: number
-  name: string
-  distance: number // meters
-  moving_time: string // "H:MM:SS"
+  run_id: number;
+  name: string;
+  distance: number; // meters
+  moving_time: string; // "H:MM:SS"
   type:
     | 'Run'
     | 'Walk'
@@ -12,24 +12,28 @@ export interface Activity {
     | 'Workout'
     | 'StairStepper'
     | 'WaterSport'
-    | string
-  subtype?: string
-  start_date: string
-  start_date_local: string
-  location_country: string | null
-  summary_polyline: string | null
-  average_heartrate: number | null
-  average_speed: number // m/s
-  elevation_gain: number | null
-  source?: string
-  streak: number
+    | string;
+  subtype?: string;
+  start_date: string;
+  start_date_local: string;
+  location_country: string | null;
+  summary_polyline: string | null;
+  average_heartrate: number | null;
+  average_speed: number; // m/s
+  elevation_gain: number | null;
+  source?: string;
+  streak: number;
 }
 
-export type SportFilter = 'all' | 'Run' | 'Walk' | 'Ride' | 'Hike' | 'Gym'
-export type WorkoutType = 'WeightTraining' | 'Workout' | 'StairStepper' | 'WaterSport'
+export type SportFilter = 'all' | 'Run' | 'Walk' | 'Ride' | 'Hike' | 'Gym';
+export type WorkoutType =
+  | 'WeightTraining'
+  | 'Workout'
+  | 'StairStepper'
+  | 'WaterSport';
 export const WORKOUT_TYPES: WorkoutType[] = [
   'WeightTraining',
   'Workout',
   'StairStepper',
   'WaterSport',
-]
+];

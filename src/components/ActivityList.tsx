@@ -1,38 +1,42 @@
-import { useState } from 'react'
-import type { Activity } from '../types'
-import { formatDistance, formatDuration, formatPace } from '../hooks/useActivities'
+import { useState } from 'react';
+import type { Activity } from '../types';
+import {
+  formatDistance,
+  formatDuration,
+  formatPace,
+} from '../hooks/useActivities';
 
 interface ActivityListProps {
-  activities: Activity[]
+  activities: Activity[];
 }
 
-type ViewMode = 'card' | 'table'
-type SortKey = 'date' | 'distance' | 'pace'
+type ViewMode = 'card' | 'table';
+type SortKey = 'date' | 'distance' | 'pace';
 
 export function ActivityList({ activities }: ActivityListProps) {
-  const [view, setView] = useState<ViewMode>('card')
-  const [sortKey, setSortKey] = useState<SortKey>('date')
+  const [view, setView] = useState<ViewMode>('card');
+  const [sortKey, setSortKey] = useState<SortKey>('date');
 
   const sorted = [...activities].sort((a, b) => {
     if (sortKey === 'date')
       return (
         new Date(b.start_date_local).getTime() -
         new Date(a.start_date_local).getTime()
-      )
-    if (sortKey === 'distance') return b.distance - a.distance
-    return b.average_speed - a.average_speed
-  })
+      );
+    if (sortKey === 'distance') return b.distance - a.distance;
+    return b.average_speed - a.average_speed;
+  });
 
   return (
-    <div className="bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-5">
+    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold">活动列表</h3>
         <div className="flex items-center gap-3">
           <select
             value={sortKey}
             onChange={(e) => setSortKey(e.target.value as SortKey)}
-            className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg px-2 py-1 text-sm"
+            className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] px-2 py-1 text-sm"
           >
             <option value="date">按日期</option>
             <option value="distance">按距离</option>
@@ -41,13 +45,13 @@ export function ActivityList({ activities }: ActivityListProps) {
           <div className="flex gap-1">
             <button
               onClick={() => setView('card')}
-              className={`px-2 py-1 rounded text-sm ${view === 'card' ? 'bg-[var(--color-all)] text-white' : 'text-[var(--color-muted)]'}`}
+              className={`rounded px-2 py-1 text-sm ${view === 'card' ? 'bg-[var(--color-all)] text-white' : 'text-[var(--color-muted)]'}`}
             >
               ▦
             </button>
             <button
               onClick={() => setView('table')}
-              className={`px-2 py-1 rounded text-sm ${view === 'table' ? 'bg-[var(--color-all)] text-white' : 'text-[var(--color-muted)]'}`}
+              className={`rounded px-2 py-1 text-sm ${view === 'table' ? 'bg-[var(--color-all)] text-white' : 'text-[var(--color-muted)]'}`}
             >
               ≡
             </button>
@@ -57,7 +61,7 @@ export function ActivityList({ activities }: ActivityListProps) {
 
       {/* Content */}
       {view === 'card' ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {sorted.slice(0, 30).map((a) => (
             <ActivityCard key={a.run_id} activity={a} />
           ))}
@@ -66,7 +70,7 @@ export function ActivityList({ activities }: ActivityListProps) {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-[var(--color-muted)] border-b border-[var(--color-border)]">
+              <tr className="border-b border-[var(--color-border)] text-left text-[var(--color-muted)]">
                 <th className="pb-2 font-medium">日期</th>
                 <th className="pb-2 font-medium">类型</th>
                 <th className="pb-2 font-medium">距离</th>
@@ -78,12 +82,12 @@ export function ActivityList({ activities }: ActivityListProps) {
               {sorted.slice(0, 50).map((a) => (
                 <tr
                   key={a.run_id}
-                  className="border-b border-[var(--color-border)]/50 hover:bg-[var(--color-bg)]"
+                  className="border-[var(--color-border)]/50 border-b hover:bg-[var(--color-bg)]"
                 >
                   <td className="py-2">{a.start_date_local.slice(0, 10)}</td>
                   <td className="py-2">
                     <span
-                      className={`px-2 py-0.5 rounded text-xs font-medium ${a.type === 'Run' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}
+                      className={`rounded px-2 py-0.5 text-xs font-medium ${a.type === 'Run' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}
                     >
                       {a.type === 'Run' ? '跑步' : '骑行'}
                     </span>
@@ -104,25 +108,27 @@ export function ActivityList({ activities }: ActivityListProps) {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 function ActivityCard({ activity: a }: { activity: Activity }) {
   return (
-    <div className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg p-4 hover:shadow-md hover:-translate-y-0.5 transition-all">
-      <div className="flex items-center justify-between mb-2">
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg)] p-4 transition-all hover:-translate-y-0.5 hover:shadow-md">
+      <div className="mb-2 flex items-center justify-between">
         <span className="text-xs text-[var(--color-muted)]">
           {a.start_date_local.slice(0, 10)}
         </span>
         <span
-          className={`px-2 py-0.5 rounded text-xs font-medium ${a.type === 'Run' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}
+          className={`rounded px-2 py-0.5 text-xs font-medium ${a.type === 'Run' ? 'bg-orange-500/20 text-orange-400' : 'bg-blue-500/20 text-blue-400'}`}
         >
           {a.type === 'Run' ? '🏃 跑步' : '🚴 骑行'}
         </span>
       </div>
-      <p className="text-2xl font-bold font-mono mb-1">
+      <p className="mb-1 font-mono text-2xl font-bold">
         {formatDistance(a.distance)}{' '}
-        <span className="text-sm font-normal text-[var(--color-muted)]">km</span>
+        <span className="text-sm font-normal text-[var(--color-muted)]">
+          km
+        </span>
       </p>
       <div className="flex gap-3 text-xs text-[var(--color-muted)]">
         <span>{formatDuration(a.moving_time)}</span>
@@ -133,5 +139,5 @@ function ActivityCard({ activity: a }: { activity: Activity }) {
         </span>
       </div>
     </div>
-  )
+  );
 }

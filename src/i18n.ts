@@ -1,4 +1,4 @@
-export type Locale = 'zh' | 'en'
+export type Locale = 'zh' | 'en';
 
 export const messages: Record<Locale, Record<string, string>> = {
   zh: {
@@ -91,4 +91,4 @@ export const messages: Record<Locale, Record<string, string>> = {
     pageOf: 'of',
     pages: '',
   },
-}
+};
